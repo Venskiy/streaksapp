@@ -1,4 +1,4 @@
-import { Flex, Title, Checkbox, Container } from '@mantine/core';
+import { Flex, Text, Title, Checkbox, Container } from '@mantine/core';
 import dayjs from 'dayjs';
 
 const WEEKDAYS = [
@@ -24,6 +24,35 @@ function WeekDaysHeader() {
   );
 }
 
+const GOALS = [
+  {
+    emoji: '🍟',
+    title: 'No fast food',
+    description: 'Can eat fast food once a week',
+  },
+  {
+    emoji: '🏃',
+    title: 'Do sport',
+    description: 'Do sport every day',
+  },
+  {
+    emoji: '🚫🥙',
+    title: 'Fasting',
+    description: 'IF 16:8 6 days a week',
+  },
+];
+function GoalList() {
+  return (
+    <div>
+      {GOALS.map((goal, idx) => (
+        <Text key={`goal-${idx}`} mt="xs">
+          {goal.emoji} {goal.title} ({goal.description})
+        </Text>
+      ))}
+    </div>
+  );
+}
+
 function WeekRow() {
   return (
     <Flex direction="row">
@@ -40,8 +69,9 @@ export function MonthView() {
   const now = dayjs();
   return (
     <Container fluid={true} px={0} h={1000} w="100%">
-      <Title order={2}>{now.format('MMMM YYYY')}</Title>
-      <Flex direction="column">
+      <Title order={1}>{now.format('MMMM YYYY')}</Title>
+      <GoalList />
+      <Flex direction="column" mt="xs">
         <WeekDaysHeader />
         <div className="month-table">
           {Array.from({ length: 5 }, (_, index) => (
