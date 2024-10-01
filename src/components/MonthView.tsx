@@ -1,4 +1,5 @@
 import { Flex, Text, Title, Checkbox, Container } from '@mantine/core';
+import { useLocalStorage } from '@mantine/hooks';
 import dayjs from 'dayjs';
 
 const WEEKDAYS = [
@@ -26,16 +27,19 @@ function WeekDaysHeader() {
 
 const GOALS = [
   {
+    id: 1,
     emoji: '🍟',
     title: 'No fast food',
     description: 'Can eat fast food once a week',
   },
   {
+    id: 2,
     emoji: '🏃',
     title: 'Do sport',
     description: 'Do sport every day',
   },
   {
+    id: 3,
     emoji: '🚫🥙',
     title: 'Fasting',
     description: 'IF 16:8 6 days a week',
@@ -53,6 +57,35 @@ function GoalList() {
   );
 }
 
+function GoalCheckbox({ day, goal }) {
+  const [goalsStatusData, setGoalsStatusData] = useLocalStorage({
+    key: 'goalsStatusData',
+    serialize: (value) => JSON.stringify(value),
+    deserialize: (localStorageValue) => JSON.parse(localStorageValue),
+    defaultValue: {},
+  });
+  const dayKey = day.format('YYYY-MM-DD');
+
+  function handleChange(e) {
+    let newGoalsStatusData = { ...goalsStatusData };
+    if (!newGoalsStatusData[dayKey]) {
+      newGoalsStatusData[dayKey] = {};
+    }
+    newGoalsStatusData[dayKey][goal.id] = e.target.checked;
+    setGoalsStatusData(newGoalsStatusData);
+  }
+
+  const checked = goalsStatusData[dayKey]?.[goal.id] || false;
+  return (
+    <Checkbox
+      checked={checked}
+      label={`${goal.emoji} ${goal.title}`}
+      color="green"
+      onChange={handleChange}
+    />
+  );
+}
+
 function WeekRow({ week }) {
   return (
     <Flex direction="row">
@@ -60,11 +93,7 @@ function WeekRow({ week }) {
         <div className="date-cell flex-grow" key={`date-cell-${idx}`}>
           <Text ta="center">{day.format('D')}</Text>
           {GOALS.map((goal, idx) => (
-            <Checkbox
-              label={`${goal.emoji} ${goal.title}`}
-              color="green"
-              key={`goal-${idx}`}
-            />
+            <GoalCheckbox day={day} goal={goal} key={`goal-${idx}`} />
           ))}
         </div>
       ))}
