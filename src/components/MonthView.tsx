@@ -56,10 +56,16 @@ function GoalList() {
 function WeekRow({ week }) {
   return (
     <Flex direction="row">
-      {week.map((day, index) => (
-        <div className="date-cell flex-grow" key={`date-cell-${index}`}>
+      {week.map((day, idx) => (
+        <div className="date-cell flex-grow" key={`date-cell-${idx}`}>
           <Text ta="center">{day.format('D')}</Text>
-          <Checkbox defaultChecked color="green" />
+          {GOALS.map((goal, idx) => (
+            <Checkbox
+              label={`${goal.emoji} ${goal.title}`}
+              color="green"
+              key={`goal-${idx}`}
+            />
+          ))}
         </div>
       ))}
     </Flex>
@@ -74,13 +80,13 @@ function getMonthView() {
   let monthView = [];
   let week = [];
   const daysNumber = 35;
-  Array.from({ length: daysNumber }).forEach((_, index) => {
-    if (index % 7 === 0) {
+  Array.from({ length: daysNumber }).forEach((_, idx) => {
+    if (idx % 7 === 0) {
       monthView.push(week);
       week = [];
     }
-    week.push(firstDayOfMonthView.add(index, 'day'));
-    if (index === daysNumber - 1) {
+    week.push(firstDayOfMonthView.add(idx, 'day'));
+    if (idx === daysNumber - 1) {
       monthView.push(week);
     }
   });
@@ -97,8 +103,8 @@ export function MonthView() {
       <Flex direction="column" mt="xs">
         <WeekDaysHeader />
         <div className="month-table">
-          {monthView.map((week, index) => (
-            <WeekRow week={week} key={`week-row-${index}`} />
+          {monthView.map((week, idx) => (
+            <WeekRow week={week} key={`week-row-${idx}`} />
           ))}
         </div>
       </Flex>
