@@ -53,11 +53,12 @@ function GoalList() {
   );
 }
 
-function WeekRow() {
+function WeekRow({ week }) {
   return (
     <Flex direction="row">
-      {Array.from({ length: 7 }, (_, index) => (
+      {week.map((day, index) => (
         <div className="date-cell flex-grow" key={`date-cell-${index}`}>
+          <Text ta="center">{day.format('D')}</Text>
           <Checkbox defaultChecked color="green" />
         </div>
       ))}
@@ -65,8 +66,30 @@ function WeekRow() {
   );
 }
 
+function getMonthView() {
+  // TODO: make month selectable
+  // TODO: handle when 1 february is on monday
+  const now = dayjs();
+  const firstDayOfMonthView = now.startOf('month').startOf('isoWeek');
+  let monthView = [];
+  let week = [];
+  const daysNumber = 35;
+  Array.from({ length: daysNumber }).forEach((_, index) => {
+    if (index % 7 === 0) {
+      monthView.push(week);
+      week = [];
+    }
+    week.push(firstDayOfMonthView.add(index, 'day'));
+    if (index === daysNumber - 1) {
+      monthView.push(week);
+    }
+  });
+  return monthView;
+}
+
 export function MonthView() {
   const now = dayjs();
+  const monthView = getMonthView();
   return (
     <Container fluid={true} px={0} h={1000} w="100%">
       <Title order={1}>{now.format('MMMM YYYY')}</Title>
@@ -74,8 +97,8 @@ export function MonthView() {
       <Flex direction="column" mt="xs">
         <WeekDaysHeader />
         <div className="month-table">
-          {Array.from({ length: 5 }, (_, index) => (
-            <WeekRow key={`week-row-${index}`} />
+          {monthView.map((week, index) => (
+            <WeekRow week={week} key={`week-row-${index}`} />
           ))}
         </div>
       </Flex>

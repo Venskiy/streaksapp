@@ -7,6 +7,10 @@ import '@mantine/core/styles/Flex.css';
 import './styles/main.css';
 import './styles/flex.css';
 
+import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
+dayjs.extend(isoWeek);
+
 import { MonthView } from './components/MonthView';
 
 export default function App() {
