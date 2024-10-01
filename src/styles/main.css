@@ -1,0 +1,11 @@
+.month-table {
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+}
+
+.date-cell {
+  height: 200px;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  margin: -1px;
+}
