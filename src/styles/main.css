@@ -1,11 +1,19 @@
 .month-table {
-  border-bottom: 1px solid black;
-  border-right: 1px solid black;
+  border-bottom: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
 }
 
 .date-cell {
   height: 200px;
-  border-top: 1px solid black;
-  border-left: 1px solid black;
+  border-top: 1px solid #dee2e6;
+  border-left: 1px solid #dee2e6;
   padding: 5px;
+}
+
+.text-gray {
+  color: #868e96;
+}
+
+.text-dark-gray {
+  color: #495057;
 }

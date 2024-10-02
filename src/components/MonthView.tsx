@@ -16,7 +16,7 @@ function WeekDaysHeader() {
     <div className="flex flex-row">
       {WEEKDAYS.map((day) => (
         <div className="flex-1" key={day}>
-          <Title order={4} ta="center">
+          <Title className="text-dark-gray" order={4} ta="center">
             {day}
           </Title>
         </div>
@@ -25,6 +25,7 @@ function WeekDaysHeader() {
   );
 }
 
+// reading
 const GOALS = [
   {
     id: 1,
