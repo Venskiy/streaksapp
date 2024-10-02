@@ -88,14 +88,22 @@ function GoalCheckbox({ day, goal }) {
 }
 
 function WeekRow({ week }) {
+  const currentMonth = dayjs().month();
   return (
     <Flex direction="row">
       {week.map((day, idx) => (
-        <div className="date-cell flex-grow" key={`date-cell-${idx}`}>
-          <Text ta="center">{day.format('D')}</Text>
-          {GOALS.map((goal, idx) => (
-            <GoalCheckbox day={day} goal={goal} key={`goal-${idx}`} />
-          ))}
+        <div className="day-cell flex-grow" key={`day-cell-${idx}`}>
+          <div>
+            <Text
+              className={currentMonth === day.month() ? '' : 'text-gray'}
+              ta="center"
+            >
+              {day.format('D')}
+            </Text>
+            {GOALS.map((goal, idx) => (
+              <GoalCheckbox day={day} goal={goal} key={`goal-${idx}`} />
+            ))}
+          </div>
         </div>
       ))}
     </Flex>
