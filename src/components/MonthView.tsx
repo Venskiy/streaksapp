@@ -58,7 +58,7 @@ function GoalList() {
   );
 }
 
-function GoalCheckbox({ day, goal }) {
+function GoalCheckbox({ day, goal, disabled }) {
   const [goalsStatusData, setGoalsStatusData] = useLocalStorage({
     key: 'goalsStatusData',
     serialize: (value) => JSON.stringify(value),
@@ -83,17 +83,20 @@ function GoalCheckbox({ day, goal }) {
       label={`${goal.emoji} ${goal.title}`}
       color="green"
       onChange={handleChange}
+      disabled={disabled}
+      mt={4}
     />
   );
 }
 
 function WeekRow({ week }) {
   const currentMonth = dayjs().month();
+  const today = dayjs();
   return (
     <Flex direction="row">
       {week.map((day, idx) => (
         <div className="day-cell flex-grow" key={`day-cell-${idx}`}>
-          <div>
+          <div className={day.isAfter(today) ? 'opacity-40' : ''}>
             <Text
               className={currentMonth === day.month() ? '' : 'text-gray'}
               ta="center"
@@ -101,7 +104,7 @@ function WeekRow({ week }) {
               {day.format('D')}
             </Text>
             {GOALS.map((goal, idx) => (
-              <GoalCheckbox day={day} goal={goal} key={`goal-${idx}`} />
+              <GoalCheckbox day={day} goal={goal} key={`goal-${idx}`} disabled={day.isAfter(today)} />
             ))}
           </div>
         </div>
@@ -111,7 +114,6 @@ function WeekRow({ week }) {
 }
 
 function getMonthView() {
-  // TODO: make month selectable
   // TODO: handle when 1 february is on monday
   const now = dayjs();
   const firstDayOfMonthView = now.startOf('month').startOf('isoWeek');
