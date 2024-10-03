@@ -1,6 +1,73 @@
+import clsx from 'clsx';
 import { Flex, Text, Title, Checkbox, Container } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import dayjs from 'dayjs';
+
+// reading
+const GOALS = [
+  {
+    id: 1,
+    emoji: '🍟',
+    title: 'No fast food',
+    description: 'Can eat fast food once a week',
+  },
+  {
+    id: 2,
+    emoji: '🏃',
+    title: 'Do sport',
+    description: 'Do sport every day',
+  },
+  {
+    id: 3,
+    emoji: '🚫🥙',
+    title: 'Fasting',
+    description: 'IF 16:8 6 days a week',
+  },
+];
+
+const startDay = '2024-09-30';
+
+enum DayStates {
+  NOT_EXIST = 'notExist', // days before startDay
+  LOCKED = 'locked', // days after today
+  TODAY = 'today',
+  FAILED = 'failed', // nothings checked
+  BELLOW_50 = 'bellow50', // less than 50% checked
+  ABOVE_50 = 'above50', // more than 50% checked
+  SUCCESS = 'success', // all checked
+}
+
+function getDayState(day: dayjs.Dayjs): DayStates {
+  const today = dayjs();
+  if (day.isBefore(dayjs(startDay), 'day')) {
+    return DayStates.NOT_EXIST;
+  } else if (day.isAfter(today, 'day')) {
+    return DayStates.LOCKED;
+  } else if (day.isSame(today, 'day')) {
+    // TODO: when everything is checked then success
+    return DayStates.TODAY;
+  } else {
+    const dayKey = day.format('YYYY-MM-DD');
+    const goalsStatusData = JSON.parse(
+      localStorage.getItem('goalsStatusData') || '{}'
+    );
+    if (!goalsStatusData[dayKey]) {
+      return DayStates.FAILED;
+    }
+    const goalsStatus = Object.values(goalsStatusData[dayKey]);
+    const goalsCount = GOALS.length; // TODO: different day could have different goals
+    const checkedGoalsCount = goalsStatus.filter(Boolean).length;
+    if (checkedGoalsCount === 0) {
+      return DayStates.FAILED;
+    } else if (checkedGoalsCount === goalsCount) {
+      return DayStates.SUCCESS;
+    } else if (checkedGoalsCount < goalsCount / 2) {
+      return DayStates.BELLOW_50;
+    } else {
+      return DayStates.ABOVE_50;
+    }
+  }
+}
 
 const WEEKDAYS = [
   'Monday',
@@ -25,27 +92,6 @@ function WeekDaysHeader() {
   );
 }
 
-// reading
-const GOALS = [
-  {
-    id: 1,
-    emoji: '🍟',
-    title: 'No fast food',
-    description: 'Can eat fast food once a week',
-  },
-  {
-    id: 2,
-    emoji: '🏃',
-    title: 'Do sport',
-    description: 'Do sport every day',
-  },
-  {
-    id: 3,
-    emoji: '🚫🥙',
-    title: 'Fasting',
-    description: 'IF 16:8 6 days a week',
-  },
-];
 function GoalList() {
   return (
     <div>
@@ -89,26 +135,44 @@ function GoalCheckbox({ day, goal, disabled }) {
   );
 }
 
+// TODO one function which will return day cell state from enum
 function WeekRow({ week }) {
   const currentMonth = dayjs().month();
-  const today = dayjs();
   return (
     <Flex direction="row">
-      {week.map((day, idx) => (
-        <div className="day-cell flex-grow" key={`day-cell-${idx}`}>
-          <div className={day.isAfter(today) ? 'opacity-40' : ''}>
-            <Text
-              className={currentMonth === day.month() ? '' : 'text-gray'}
-              ta="center"
-            >
-              {day.format('D')}
-            </Text>
-            {GOALS.map((goal, idx) => (
-              <GoalCheckbox day={day} goal={goal} key={`goal-${idx}`} disabled={day.isAfter(today)} />
-            ))}
+      {week.map((day, idx) => {
+        const dayState = getDayState(day);
+        return (
+          <div
+            className={clsx('day-cell', 'flex-1', {
+              'day-failed': dayState === DayStates.FAILED,
+              'day-bellow50': dayState === DayStates.BELLOW_50,
+              'day-above50': dayState === DayStates.ABOVE_50,
+              'day-success': dayState === DayStates.SUCCESS,
+            })}
+            key={`day-cell-${idx}`}
+          >
+            <div className={dayState === DayStates.LOCKED ? 'opacity-40' : ''}>
+              <Text
+                className={currentMonth === day.month() ? '' : 'text-gray'}
+                ta="center"
+              >
+                {day.format('D')}
+              </Text>
+              {dayState === DayStates.NOT_EXIST
+                ? null
+                : GOALS.map((goal, idx) => (
+                    <GoalCheckbox
+                      day={day}
+                      goal={goal}
+                      key={`goal-${idx}`}
+                      disabled={dayState === DayStates.LOCKED}
+                    />
+                  ))}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </Flex>
   );
 }
