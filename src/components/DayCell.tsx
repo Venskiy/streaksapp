@@ -23,7 +23,16 @@ function getDayState(day: dayjs.Dayjs): DayStates {
   } else if (day.isAfter(today, 'day')) {
     return DayStates.LOCKED;
   } else if (day.isSame(today, 'day')) {
-    // TODO: when everything is checked then success
+    // When today everything is checked, it should be marked as success
+    const dayKey = getKeyForDay(day);
+    const metricsStatusData: MetricsStatusData = JSON.parse(
+      localStorage.getItem('metricsStatusData') || '{}'
+    );
+    const metricsForDay = Object.values(metricsStatusData[dayKey] || {});
+    const checkedMetricsCount = metricsForDay.filter(Boolean).length;
+    if (checkedMetricsCount === METRICS.length) {
+      return DayStates.SUCCESS;
+    }
     return DayStates.TODAY;
   } else {
     const dayKey = getKeyForDay(day);
