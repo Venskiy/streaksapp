@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Flex, Title, Container } from '@mantine/core';
+import { Flex, Title, Container, Button, Group } from '@mantine/core';
 import dayjs from 'dayjs';
 import { MetricsList } from './MetricsList';
 import { DaysOfWeekHeader } from './DaysOfWeekHeader';
@@ -32,26 +32,16 @@ export function MonthView() {
   const monthView = getMonthView(currentMonth);
   return (
     <Container fluid={true} px={0} h={1000} w="100%">
-      <Title order={1}>{currentMonth.format('MMMM YYYY')}</Title>
       <MetricsList />
-      <a
-        href="#"
-        onClick={(e) => {
-          e.preventDefault();
-          setMonthIndex((mIndex) => mIndex - 1);
-        }}
-      >
-        Back
-      </a>
-      <a
-        href="#"
-        onClick={(e) => {
-          e.preventDefault();
-          setMonthIndex((mIndex) => mIndex + 1);
-        }}
-      >
-        Next
-      </a>
+      <Group>
+        <Button onClick={() => setMonthIndex((mIndex) => mIndex - 1)}>
+          Pervious
+        </Button>
+        <Title order={1}>{currentMonth.format('MMMM YYYY')}</Title>
+        <Button onClick={() => setMonthIndex((mIndex) => mIndex + 1)}>
+          Next
+        </Button>
+      </Group>
       <Flex direction="column" mt="xs">
         <DaysOfWeekHeader />
         <div className="month-table">
