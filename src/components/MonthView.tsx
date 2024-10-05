@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Flex, Title, Container, Button, Group } from '@mantine/core';
 import dayjs from 'dayjs';
-import { MetricsList } from './MetricsList';
 import { DaysOfWeekHeader } from './DaysOfWeekHeader';
 import { DayCell } from './DayCell';
 
@@ -32,7 +31,6 @@ export function MonthView() {
   const monthView = getMonthView(currentMonth);
   return (
     <Container fluid={true} px={0} h={1000} w="100%">
-      <MetricsList />
       <Group>
         <Button onClick={() => setMonthIndex((mIndex) => mIndex - 1)}>
           Pervious
