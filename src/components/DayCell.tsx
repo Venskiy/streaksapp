@@ -6,7 +6,7 @@ import { START_DAY, METRICS } from '../constants';
 import { Metric, MetricsStatusData } from '../types';
 import { getKeyForDay } from '../utils';
 
-enum DayStates {
+export enum DayStates {
   NOT_EXIST = 'notExist', // days before startDay
   LOCKED = 'locked', // days after today
   TODAY = 'today',
@@ -16,7 +16,7 @@ enum DayStates {
   SUCCESS = 'success', // all checked
 }
 
-function getDayState(day: dayjs.Dayjs): DayStates {
+export function getDayState(day: dayjs.Dayjs): DayStates {
   const today = dayjs();
   if (day.isBefore(dayjs(START_DAY), 'day')) {
     return DayStates.NOT_EXIST;

@@ -15,10 +15,15 @@ import './styles/flex.css';
 
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import isLeapYear from 'dayjs/plugin/isLeapYear';
+import dayOfYear from 'dayjs/plugin/dayOfYear';
 dayjs.extend(isoWeek);
+dayjs.extend(isLeapYear);
+dayjs.extend(dayOfYear);
 
 import { MonthView } from './components/MonthView';
 import { MetricsList } from './components/MetricsList';
+import { YearView } from './components/YearView';
 
 enum Views {
   YEAR_VIEW = 'yearView',
@@ -41,7 +46,7 @@ export default function App() {
           onChange={setSelectedView}
         />
         <Space h="lg" />
-        {selectedView === Views.YEAR_VIEW && <div>Year view</div>}
+        {selectedView === Views.YEAR_VIEW && <YearView />}
         {selectedView === Views.MONTH_VIEW && <MonthView />}
         <Space h="lg" />
       </Container>
