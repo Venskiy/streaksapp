@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Flex, Title, Container } from '@mantine/core';
 import dayjs from 'dayjs';
 import { MetricsList } from './MetricsList';
@@ -6,10 +7,9 @@ import { DayCell } from './DayCell';
 
 type MonthViewType = dayjs.Dayjs[][];
 
-function getMonthView(): MonthViewType {
+function getMonthView(currentMonth: dayjs.Dayjs): MonthViewType {
   // TODO: handle when 1 february is on monday
-  const now = dayjs();
-  const firstDayOfMonthView = now.startOf('month').startOf('isoWeek');
+  const firstDayOfMonthView = currentMonth.startOf('month').startOf('isoWeek');
   const monthView: MonthViewType = [];
   let week: dayjs.Dayjs[] = [];
   const daysNumber = 35;
@@ -27,12 +27,31 @@ function getMonthView(): MonthViewType {
 }
 
 export function MonthView() {
-  const now = dayjs();
-  const monthView = getMonthView();
+  const [monthIndex, setMonthIndex] = useState(0);
+  const currentMonth = dayjs().add(monthIndex, 'month');
+  const monthView = getMonthView(currentMonth);
   return (
     <Container fluid={true} px={0} h={1000} w="100%">
-      <Title order={1}>{now.format('MMMM YYYY')}</Title>
+      <Title order={1}>{currentMonth.format('MMMM YYYY')}</Title>
       <MetricsList />
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          setMonthIndex((mIndex) => mIndex - 1);
+        }}
+      >
+        Back
+      </a>
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          setMonthIndex((mIndex) => mIndex + 1);
+        }}
+      >
+        Next
+      </a>
       <Flex direction="column" mt="xs">
         <DaysOfWeekHeader />
         <div className="month-table">
