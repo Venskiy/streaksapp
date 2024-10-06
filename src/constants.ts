@@ -1,4 +1,3 @@
-// reading
 export const METRICS = [
   {
     id: 1,
@@ -18,9 +17,15 @@ export const METRICS = [
     title: 'Fasting',
     description: 'IF 16:8 6 days a week',
   },
+  {
+    id: 4,
+    emoji: '📚',
+    title: 'Reading',
+    description: 'Read at least 10/15 minutes a day',
+  }
 ];
 
-export const START_DAY = '2024-09-30';
+export const START_DAY = '2024-10-06';
 
 export const DAY_STATE_COLORS = {
   'failed': '#ff99a9',
