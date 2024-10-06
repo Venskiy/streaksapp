@@ -11,22 +11,27 @@
 }
 
 .day-failed {
-  background-color: #ff8787;
+  background-color: #ff99a9;
 }
 
 .day-bellow50 {
-  background-color: #ffc107;
+  background-color: #c8f9cf;
 }
 
 .day-above50 {
-  background-color: #85f79c;
+  background-color: #80ed99;
 }
 
 .day-success {
-  background-color: #2b8a3e;
+  background-color: #21ad70;
 }
 
-
+.year-view-day-box {
+  height: 24px;
+  width: 24px;
+  border: 1px solid #dee2e6;
+  border-radius: 3px;
+}
 
 .opacity-40 {
   opacity: 0.4;

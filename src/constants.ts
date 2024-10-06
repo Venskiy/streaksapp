@@ -21,3 +21,10 @@ export const METRICS = [
 ];
 
 export const START_DAY = '2024-09-30';
+
+export const DAY_STATE_COLORS = {
+  'failed': '#ff99a9',
+  'bellow50': '#c8f9cf',
+  'above50': '#80ed99',
+  'success': '#21ad70',
+}

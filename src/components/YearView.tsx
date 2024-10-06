@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
-import clsx from 'clsx';
-import { Checkbox, Container, Group, Title } from '@mantine/core';
-import { DayStates, getDayState } from './DayCell';
+import { Container, Group, Title } from '@mantine/core';
+import { getDayState } from './DayCell';
+import { DAY_STATE_COLORS } from '@/constants';
 
 export function YearView() {
   const today = dayjs();
@@ -14,17 +14,12 @@ export function YearView() {
           const day = today.dayOfYear(idx + 1);
           const dayState = getDayState(day);
           return (
-            <Checkbox
+            <div
+              className="year-view-day-box"
               key={idx}
-              // disabled
-              defaultChecked={dayState !== DayStates.TODAY}
-              disabled={dayState === DayStates.LOCKED || dayState === DayStates.NOT_EXIST}
-              color={clsx({
-                'red': dayState === DayStates.FAILED,
-                'yellow': dayState === DayStates.BELLOW_50,
-                'green': dayState === DayStates.ABOVE_50,
-                'blue': dayState === DayStates.SUCCESS,
-              })}
+              style={{
+                backgroundColor: DAY_STATE_COLORS[dayState],
+              }}
             />
           );
         })}
