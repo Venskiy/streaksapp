@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import dayjs from 'dayjs';
+import { useState } from 'react';
 import { Text, Checkbox } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { START_DAY, METRICS } from '../constants';
@@ -58,10 +59,12 @@ function MetricCheckbox({
   day,
   metric,
   disabled,
+  onChange,
 }: {
   day: dayjs.Dayjs;
   metric: Metric;
   disabled: boolean;
+  onChange: () => void;
 }) {
   const [metricsStatusData, setMetricsStatusData] =
     useLocalStorage<MetricsStatusData>({
@@ -79,6 +82,7 @@ function MetricCheckbox({
     }
     newMetricsStatusData[dayKey][metric.id] = e.target.checked;
     setMetricsStatusData(newMetricsStatusData);
+    onChange();
   }
 
   const checked = metricsStatusData[dayKey]?.[metric.id] || false;
@@ -95,6 +99,7 @@ function MetricCheckbox({
 }
 
 export function DayCell({ day }: { day: dayjs.Dayjs }) {
+  const [, setId] = useState<number>(0);
   const dayOutOfTheCurrentMonth = dayjs().month() !== day.month();
   const dayState = getDayState(day);
   return (
@@ -121,6 +126,7 @@ export function DayCell({ day }: { day: dayjs.Dayjs }) {
                 metric={m}
                 key={`metric-${idx}`}
                 disabled={dayState === DayStates.LOCKED}
+                onChange={() => setId((prev) => prev + 1)}
               />
             ))}
       </div>
