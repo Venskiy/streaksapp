@@ -35,7 +35,7 @@ export function getDayState(day: dayjs.Dayjs): DayStates {
       localStorage.getItem('metricsStatusData') || '{}'
     );
     const checkedMetricsForDayCount = Object.values(
-      metricsStatusData[dayKey]
+      metricsStatusData[dayKey] || {}
     ).filter(Boolean).length;
     if (checkedMetricsForDayCount === allMetricsForDayCount) {
       return DayStates.SUCCESS;
@@ -47,7 +47,7 @@ export function getDayState(day: dayjs.Dayjs): DayStates {
       localStorage.getItem('metricsStatusData') || '{}'
     );
     const checkedMetricsForDayCount = Object.values(
-      metricsStatusData[dayKey]
+      metricsStatusData[dayKey] || {}
     ).filter(Boolean).length;
     if (checkedMetricsForDayCount === 0) {
       return DayStates.FAILED;
