@@ -3,12 +3,12 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Text, Checkbox } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
-import { START_DAY, METRICS } from '../constants';
+import { METRICS } from '../constants';
 import { Metric, MetricsStatusData, MetricStatus } from '../types';
 import { getKeyForDay } from '../utils';
 
 export enum DayStates {
-  NOT_EXIST = 'notExist', // days before startDay
+  EMPTY = 'empty', // no metrics for day
   LOCKED = 'locked', // days after today
   TODAY = 'today',
   FAILED = 'failed', // nothings checked
@@ -17,10 +17,15 @@ export enum DayStates {
   SUCCESS = 'success', // all checked
 }
 
+function getMetricsForDay(day: dayjs.Dayjs): Metric[] {
+  return METRICS.filter((m) => !day.isBefore(dayjs(m.startDay), 'day'));
+}
+
 export function getDayState(day: dayjs.Dayjs): DayStates {
+  const allMetricsForDayCount = getMetricsForDay(day).length;
   const today = dayjs();
-  if (day.isBefore(dayjs(START_DAY), 'day')) {
-    return DayStates.NOT_EXIST;
+  if (allMetricsForDayCount === 0) {
+    return DayStates.EMPTY;
   } else if (day.isAfter(today, 'day')) {
     return DayStates.LOCKED;
   } else if (day.isSame(today, 'day')) {
@@ -29,9 +34,10 @@ export function getDayState(day: dayjs.Dayjs): DayStates {
     const metricsStatusData: MetricsStatusData = JSON.parse(
       localStorage.getItem('metricsStatusData') || '{}'
     );
-    const metricsForDay = Object.values(metricsStatusData[dayKey] || {});
-    const checkedMetricsCount = metricsForDay.filter(Boolean).length;
-    if (checkedMetricsCount === METRICS.length) {
+    const checkedMetricsForDayCount = Object.values(
+      metricsStatusData[dayKey]
+    ).filter(Boolean).length;
+    if (checkedMetricsForDayCount === allMetricsForDayCount) {
       return DayStates.SUCCESS;
     }
     return DayStates.TODAY;
@@ -40,14 +46,14 @@ export function getDayState(day: dayjs.Dayjs): DayStates {
     const metricsStatusData: MetricsStatusData = JSON.parse(
       localStorage.getItem('metricsStatusData') || '{}'
     );
-    const metricsForDay = Object.values(metricsStatusData[dayKey] || {});
-    // TODO: different day could have different goals. Can't use METRICS.length in the future.
-    const checkedMetricsCount = metricsForDay.filter(Boolean).length;
-    if (checkedMetricsCount === 0) {
+    const checkedMetricsForDayCount = Object.values(
+      metricsStatusData[dayKey]
+    ).filter(Boolean).length;
+    if (checkedMetricsForDayCount === 0) {
       return DayStates.FAILED;
-    } else if (checkedMetricsCount === METRICS.length) {
+    } else if (checkedMetricsForDayCount === allMetricsForDayCount) {
       return DayStates.SUCCESS;
-    } else if (checkedMetricsCount < METRICS.length / 2) {
+    } else if (checkedMetricsForDayCount < allMetricsForDayCount / 2) {
       return DayStates.BELLOW_50;
     } else {
       return DayStates.ABOVE_50;
@@ -115,6 +121,7 @@ export function DayCell({ day }: { day: dayjs.Dayjs }) {
   const [, setId] = useState<number>(0);
   const dayOutOfTheCurrentMonth = dayjs().month() !== day.month();
   const dayState = getDayState(day);
+  const allMetricsForDay = getMetricsForDay(day);
   return (
     <div
       className={clsx('day-cell', 'flex-1', {
@@ -131,9 +138,9 @@ export function DayCell({ day }: { day: dayjs.Dayjs }) {
         >
           {day.format('D')}
         </Text>
-        {dayState === DayStates.NOT_EXIST
+        {dayState === DayStates.EMPTY
           ? null
-          : METRICS.map((m, idx) => (
+          : allMetricsForDay.map((m, idx) => (
               <MetricCheckbox
                 day={day}
                 metric={m}

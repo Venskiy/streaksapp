@@ -4,7 +4,7 @@
 }
 
 .day-cell {
-  height: 160px;
+  min-height: 160px;
   border-top: 1px solid #dee2e6;
   border-left: 1px solid #dee2e6;
   padding: 8px;
