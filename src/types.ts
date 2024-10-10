@@ -9,8 +9,10 @@ export type Metric = {
   description: string;
 };
 
+export type MetricStatus = false | true | 'settle';
+
 export type MetricsStatusForDay = {
-  [key: MetricId]: boolean;
+  [key: MetricId]: MetricStatus;
 };
 
 export type MetricsStatusData = {

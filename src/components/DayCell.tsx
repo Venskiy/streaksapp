@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Text, Checkbox } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { START_DAY, METRICS } from '../constants';
-import { Metric, MetricsStatusData } from '../types';
+import { Metric, MetricsStatusData, MetricStatus } from '../types';
 import { getKeyForDay } from '../utils';
 
 export enum DayStates {
@@ -55,6 +55,16 @@ export function getDayState(day: dayjs.Dayjs): DayStates {
   }
 }
 
+function getNextMetricStatus(currentStatus: MetricStatus): MetricStatus {
+  if (currentStatus === false) {
+    return true;
+  } else if (currentStatus === true) {
+    return 'settle';
+  } else {
+    return false;
+  }
+}
+
 function MetricCheckbox({
   day,
   metric,
@@ -75,12 +85,14 @@ function MetricCheckbox({
     });
   const dayKey = getKeyForDay(day);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange() {
     const newMetricsStatusData: MetricsStatusData = { ...metricsStatusData };
     if (!newMetricsStatusData[dayKey]) {
       newMetricsStatusData[dayKey] = {};
     }
-    newMetricsStatusData[dayKey][metric.id] = e.target.checked;
+    newMetricsStatusData[dayKey][metric.id] = getNextMetricStatus(
+      metricsStatusData[dayKey]?.[metric.id] || false
+    );
     setMetricsStatusData(newMetricsStatusData);
     onChange();
   }
@@ -88,7 +100,8 @@ function MetricCheckbox({
   const checked = metricsStatusData[dayKey]?.[metric.id] || false;
   return (
     <Checkbox
-      checked={checked}
+      checked={checked !== 'settle' && checked}
+      indeterminate={checked === 'settle'}
       label={`${metric.emoji} ${metric.title}`}
       color="green"
       onChange={handleChange}
