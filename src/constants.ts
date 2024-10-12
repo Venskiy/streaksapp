@@ -7,7 +7,8 @@ export const METRICS: Metric[] = [
     title: 'No fast food',
     reasons:
       "Better skin, better look, less fat, don't damage your health. Helps loose weight.",
-    description: 'Can eat fast food once a week',
+    description:
+      'Can eat fast food 2 times a month. There should be a good reason.',
     startDay: '2024-10-06',
   },
   {
@@ -39,6 +40,13 @@ export const METRICS: Metric[] = [
     title: 'Early wake up',
     description: 'Early and quick wake up. Try at 6:00.',
     startDay: '2024-10-11',
+  },
+  {
+    id: 6,
+    emoji: '🚫🍺',
+    title: 'No alcohol',
+    description: 'Can only drink 2 times a month in a good company',
+    startDay: '2024-10-12',
   },
 ];
 
