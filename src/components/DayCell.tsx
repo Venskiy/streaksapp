@@ -104,12 +104,14 @@ function MetricCheckbox({
   }
 
   const checked = metricsStatusData[dayKey]?.[metric.id] || false;
+  const failed = !checked && day.isBefore(dayjs(), 'day');
   return (
     <Checkbox
+      style={{ backgroundColor: failed ? '#ff99a9' : undefined }}
       checked={checked !== 'settle' && checked}
       indeterminate={checked === 'settle'}
       label={`${metric.emoji} ${metric.title}`}
-      color="green"
+      color={failed ? 'red' : 'green'}
       onChange={handleChange}
       disabled={disabled}
       mt={4}
