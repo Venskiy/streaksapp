@@ -29,18 +29,18 @@ export function getDayState(day: dayjs.Dayjs): DayStates {
   } else if (day.isAfter(today, 'day')) {
     return DayStates.LOCKED;
   } else if (day.isSame(today, 'day')) {
-    // When today everything is checked, it should be marked as success
-    const dayKey = getKeyForDay(day);
-    const metricsStatusData: MetricsStatusData = JSON.parse(
-      localStorage.getItem('metricsStatusData') || '{}'
-    );
-    const checkedMetricsForDayCount = Object.values(
-      metricsStatusData[dayKey] || {}
-    ).filter(Boolean).length;
-    if (checkedMetricsForDayCount === allMetricsForDayCount) {
-      return DayStates.SUCCESS;
-    }
     return DayStates.TODAY;
+    // When today everything is checked, it should be marked as success
+    // const dayKey = getKeyForDay(day);
+    // const metricsStatusData: MetricsStatusData = JSON.parse(
+    //   localStorage.getItem('metricsStatusData') || '{}'
+    // );
+    // const checkedMetricsForDayCount = Object.values(
+    //   metricsStatusData[dayKey] || {}
+    // ).filter(Boolean).length;
+    // if (checkedMetricsForDayCount === allMetricsForDayCount) {
+    //   return DayStates.SUCCESS;
+    // }
   } else {
     const dayKey = getKeyForDay(day);
     const metricsStatusData: MetricsStatusData = JSON.parse(
