@@ -135,7 +135,7 @@ export function DayCell({ day }: { day: dayjs.Dayjs }) {
     >
       <div className={clsx({ 'opacity-40': dayState === DayStates.LOCKED })}>
         <Text
-          className={clsx({ 'text-gray': dayOutOfTheCurrentMonth })}
+          className={clsx({ 'text-gray': dayOutOfTheCurrentMonth, 'current-date': dayState === DayStates.TODAY })}
           ta="center"
         >
           {day.format('D')}

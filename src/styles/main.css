@@ -27,6 +27,14 @@
   background-color: #21ad70;
 }
 
+.current-date {
+  width: 26px;
+  height: 26px;
+  margin: auto;
+  border-radius: 50%;
+  background-color: #80ed99;
+}
+
 .year-view-day-box {
   height: 24px;
   width: 24px;
