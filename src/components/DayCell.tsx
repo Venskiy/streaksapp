@@ -3,9 +3,8 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Text, Checkbox } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
-import { METRICS } from '../constants';
 import { Metric, MetricsStatusData, MetricStatus } from '../types';
-import { getKeyForDay } from '../utils';
+import { getKeyForDay, getMetricsForDay } from '../utils';
 
 export enum DayStates {
   EMPTY = 'empty', // no metrics for day
@@ -15,10 +14,6 @@ export enum DayStates {
   BELLOW_50 = 'bellow50', // less than 50% checked
   ABOVE_50 = 'above50', // more than 50% checked
   SUCCESS = 'success', // all checked
-}
-
-function getMetricsForDay(day: dayjs.Dayjs): Metric[] {
-  return METRICS.filter((m) => !day.isBefore(dayjs(m.startDay), 'day'));
 }
 
 export function getDayState(day: dayjs.Dayjs): DayStates {

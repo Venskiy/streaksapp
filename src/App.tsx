@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '@mantine/core/styles.css';
 import {
   Container,
@@ -21,9 +21,10 @@ dayjs.extend(isoWeek);
 dayjs.extend(isLeapYear);
 dayjs.extend(dayOfYear);
 
-import { MonthView } from './components/MonthView';
-import { MetricsList } from './components/MetricsList';
-import { YearView } from './components/YearView';
+import { MonthView } from '@/components/MonthView';
+import { MetricsList } from '@/components/MetricsList';
+import { YearView } from '@/components/YearView';
+import { initMetricsForDaysInLocalStorage } from '@/utils';
 
 enum Views {
   YEAR_VIEW = 'yearView',
@@ -32,11 +33,14 @@ enum Views {
 
 export default function App() {
   const [selectedView, setSelectedView] = useState<string>(Views.MONTH_VIEW);
+
+  useEffect(() => {
+    initMetricsForDaysInLocalStorage();
+  }, []);
+
   return (
     <MantineProvider theme={theme}>
       <Container fluid={true} px={70} py={30} mb="md">
-        <MetricsList />
-        <Space h="lg" />
         <SegmentedControl
           data={[
             { value: Views.MONTH_VIEW, label: 'Month view' },
@@ -48,6 +52,8 @@ export default function App() {
         <Space h="lg" />
         {selectedView === Views.YEAR_VIEW && <YearView />}
         {selectedView === Views.MONTH_VIEW && <MonthView />}
+        <Space h="xl" />
+        <MetricsList />
         <Space h="lg" />
       </Container>
     </MantineProvider>
