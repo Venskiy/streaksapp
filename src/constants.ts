@@ -1,6 +1,13 @@
 import { Metric } from './types';
 
 export const METRICS: Metric[] = [
+  { id: 0,
+    emoji: '🌞',
+    title: 'Morning routine',
+    reasons: '',
+    description: '',
+    startDay: '2024-10-24',
+  },
   {
     id: 1,
     emoji: '🍟',
@@ -47,6 +54,20 @@ export const METRICS: Metric[] = [
     title: 'No alcohol',
     description: 'Can only drink 2 times a month in a good company',
     startDay: '2024-10-12',
+  },
+  { id: 7,
+    emoji: '🧑🏻‍💻',
+    title: 'Intense work',
+    reasons: '',
+    description: '',
+    startDay: '2024-10-24',
+  },
+  { id: 8,
+    emoji: '🌙',
+    title: 'Night routine',
+    reasons: '',
+    description: '',
+    startDay: '2024-10-24',
   },
 ];
 
