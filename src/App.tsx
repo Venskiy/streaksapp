@@ -40,7 +40,7 @@ export default function App() {
 
   return (
     <MantineProvider theme={theme}>
-      <Container fluid={true} px={70} py={30} mb="md">
+      <Container fluid={true} px={70} py={30} mb="md" height="auto">
         <SegmentedControl
           data={[
             { value: Views.MONTH_VIEW, label: 'Month view' },

@@ -3,6 +3,7 @@ import { Flex, Title, Container, Button, Group } from '@mantine/core';
 import dayjs from 'dayjs';
 import { DaysOfWeekHeader } from './DaysOfWeekHeader';
 import { DayCell } from './DayCell';
+import { StatsForMonth } from './StatsForMonth';
 
 type MonthViewType = dayjs.Dayjs[][];
 
@@ -30,7 +31,8 @@ export function MonthView() {
   const currentMonth = dayjs().add(monthIndex, 'month');
   const monthView = getMonthView(currentMonth);
   return (
-    <Container fluid={true} px={0} h={1000} w="100%">
+    <Container fluid={true} px={0} w="100%">
+      <StatsForMonth month={currentMonth} />
       <Group>
         <Button onClick={() => setMonthIndex((mIndex) => mIndex - 1)}>
           Pervious
