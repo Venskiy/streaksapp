@@ -100,13 +100,16 @@ function MetricCheckbox({
 
   const checked = metricsStatusData[dayKey]?.[metric.id] || false;
   const failed = !checked && day.isBefore(dayjs(), 'day');
+  const settle =
+    metricsStatusData[dayKey]?.[metric.id] === 'settle' &&
+    day.isBefore(dayjs(), 'day');
   return (
     <Checkbox
-      style={{ backgroundColor: failed ? '#ff99a9' : undefined }}
+      color="green"
+      style={{ backgroundColor: clsx({ '#ff99a9': failed, '#fcc419': settle }) }}
       checked={checked !== 'settle' && checked}
       indeterminate={checked === 'settle'}
       label={`${metric.emoji} ${metric.title}`}
-      color={failed ? 'red' : 'green'}
       onChange={handleChange}
       disabled={disabled}
       mt={4}
@@ -130,7 +133,10 @@ export function DayCell({ day }: { day: dayjs.Dayjs }) {
     >
       <div className={clsx({ 'opacity-40': dayState === DayStates.LOCKED })}>
         <Text
-          className={clsx({ 'text-gray': dayOutOfTheCurrentMonth, 'current-date': dayState === DayStates.TODAY })}
+          className={clsx({
+            'text-gray': dayOutOfTheCurrentMonth,
+            'current-date': dayState === DayStates.TODAY,
+          })}
           ta="center"
         >
           {day.format('D')}
