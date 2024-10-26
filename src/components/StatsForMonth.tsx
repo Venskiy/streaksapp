@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import React from 'react';
 import { MetricsStatusData } from '@/types';
-import { Title, Text, Flex } from '@mantine/core';
+import { Title, Text, Flex, Table } from '@mantine/core';
 import { METRICS } from '@/constants';
 import { getKeyForDay } from '@/utils';
 
@@ -20,10 +20,13 @@ function getStatsForMonth(month: dayjs.Dayjs) {
     if (metricsStatusData[dayKey]) {
       Object.keys(metricsStatusData[dayKey]).forEach((metric) => {
         if (!stats[metric]) {
-          stats[metric] = { count: 0, success: 0 };
+          stats[metric] = { settle: 0, success: 0, failed: 0 };
         }
-        stats[metric].count = stats[metric].count + 1;
-        if (metricsStatusData[dayKey][metric]) {
+        if (metricsStatusData[dayKey][metric] === 'settle') {
+          stats[metric].settle = stats[metric].settle + 1;
+        } else if (metricsStatusData[dayKey][metric] === false) {
+          stats[metric].failed = stats[metric].failed + 1;
+        } else if (metricsStatusData[dayKey][metric]) {
           stats[metric].success = stats[metric].success + 1;
         }
       });
@@ -36,21 +39,34 @@ function getStatsForMonth(month: dayjs.Dayjs) {
 export function StatsForMonth({ month }: { month: dayjs.Dayjs }) {
   const stats = getStatsForMonth(month);
   return (
-    <Flex direction="column" mb="lg">
-      <Title order={3}>Stats:</Title>
+    <Table
+      withTableBorder
+      withColumnBorders
+      style={{ tableLayout: 'auto', width: 'auto' }}
+      mb="lg"
+    >
+      <Table.Tr>
+        <Table.Th>Metric</Table.Th>
+        <Table.Th>Success</Table.Th>
+        <Table.Th>Failed</Table.Th>
+        <Table.Th>settle</Table.Th>
+      </Table.Tr>
       {METRICS.map((metric) => {
         return (
           <React.Fragment key={metric.id}>
             {stats[metric.id] ? (
-              <Text>
-                {stats[metric.id].success} / {stats[metric.id].count} (
-                {stats[metric.id].count - stats[metric.id].success}) -{' '}
-                {metric.emoji} {metric.title}
-              </Text>
+              <Table.Tr key={metric.id}>
+                <Table.Td>
+                  {metric.emoji} {metric.title}
+                </Table.Td>
+                <Table.Td>{stats[metric.id].success}</Table.Td>
+                <Table.Td>{stats[metric.id].failed}</Table.Td>
+                <Table.Td>{stats[metric.id].settle}</Table.Td>
+              </Table.Tr>
             ) : null}
           </React.Fragment>
         );
       })}
-    </Flex>
+    </Table>
   );
 }
